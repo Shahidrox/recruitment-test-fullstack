@@ -1,0 +1,603 @@
+{
+  "swagger": "2.0",
+  "host": "localhost:3000",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "Fullstack development test",
+      "description": "Article",
+      "externalDocs": {
+        "description": "Find out more about our Article",
+        "url": "localhost:3000"
+      }
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": { 
+                "name":{
+                  "type": "string",
+                },     
+                "email":{
+                  "type": "string",
+                },
+                "password":{
+                  "type": "string",
+                },
+                "password_confirmation":{
+                  "type": "string",
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/users/update_user": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update users",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "client",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "uid",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "expiry",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "token-type",
+            "required": true,
+            "in": "header",
+          },{
+            "in": "query",
+            "name": "name",
+            "required": true,
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "mobile",
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "image",
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "location",
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "about_me",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "description": "successful operation",
+              "type": "object",
+              "properties": {
+                "name": {"type": "string"},
+                "mobile": {"type": "string"},
+                "image": {"type": "string"},
+                "location": {"type": "string"},
+                "about_me":{"type": "string"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params"
+          },
+          "500": {
+            "description": "Somthing went wrong"
+          }
+        }
+      },
+    },
+    "/user/sign_in": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs user into the system",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The user name for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+            },
+            "headers": {
+              "X-Rate-Limit": {
+                "type": "integer",
+                "format": "int32",
+                "description": "calls per hour allowed by the user"
+              },
+              "X-Expires-After": {
+                "type": "string",
+                "format": "date-time",
+                "description": "date in UTC when token expires"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid email/password supplied"
+          }
+        }
+      }
+    },
+    "/user/sign_out": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs out current logged in user session",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+          },{
+            "name": "client",
+            "in": "header",
+          },{
+            "name": "uid",
+            "in": "header",
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/articles": {
+      "get": {
+        "tags": [
+          "Article"
+        ],
+        "summary": "Get list of articles",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page"
+          },{
+            "in": "query",
+            "name": "title"
+          },{
+            "in": "query",
+            "name": "publish_date"
+          },{
+            "in": "query",
+            "name": "is_publish",
+            "enum": [ "true", "false"]
+          },{
+            "in": "query",
+            "name": "user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "description": "successful operation",
+              "type": "object",
+              "properties": {
+                "title": {"type": "string"},
+                "content": {"type": "string"},
+                "image": {"type": "string"},
+                "view_count": {"type": "integer", "format": "int32"},
+                "publish_date":{"type": "string", "format": "date-time"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params"
+          },
+          "500": {
+            "description": "Somthing went wrong"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Article"
+        ],
+        "summary": "Create article",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+          },{
+            "name": "client",
+            "in": "header",
+          },{
+            "name": "uid",
+            "in": "header",
+          },{
+            "name": "expiry",
+            "in": "header",
+          },{
+            "name": "token-type",
+            "in": "header",
+          },{
+            "in": "query",
+            "name": "title",
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "content",
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "publish_date",
+            "type": "date-time"
+          },{
+            "in": "query",
+            "name": "is_publish",
+            "enum": [ "true", "false"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "description": "successful operation",
+              "type": "object",
+              "properties": {
+                "title": {"type": "string"},
+                "content": {"type": "string"},
+                "image": {"type": "string"},
+                "view_count": {"type": "integer", "format": "int32"},
+                "publish_date":{"type": "string", "format": "date-time"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params"
+          },
+          "500": {
+            "description": "Somthing went wrong"
+          }
+        }
+      },
+    },
+    "/articles/{id}": {
+      "put": {
+        "tags": [
+          "Article"
+        ],
+        "summary": "Update article",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "client",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "uid",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "expiry",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "token-type",
+            "required": true,
+            "in": "header",
+          },{
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          },{
+            "in": "query",
+            "name": "title",
+            "required": true,
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "content",
+            "required": true,
+            "type": "string"
+          },{
+            "in": "query",
+            "name": "publish_date",
+            "type": "date-time"
+          },{
+            "in": "query",
+            "name": "is_publish",
+            "enum": [ "true", "false"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "description": "successful operation",
+              "type": "object",
+              "properties": {
+                "title": {"type": "string"},
+                "content": {"type": "string"},
+                "image": {"type": "string"},
+                "view_count": {"type": "integer", "format": "int32"},
+                "publish_date":{"type": "string", "format": "date-time"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params"
+          },
+          "500": {
+            "description": "Somthing went wrong"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Article"
+        ],
+        "summary": "Delete article",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "client",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "uid",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "expiry",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "token-type",
+            "required": true,
+            "in": "header",
+          },{
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "description": "successful operation",
+              "type": "object",
+              "properties": {
+                "title": {"type": "string"},
+                "content": {"type": "string"},
+                "image": {"type": "string"},
+                "view_count": {"type": "integer", "format": "int32"},
+                "publish_date":{"type": "string", "format": "date-time"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params"
+          },
+          "500": {
+            "description": "Somthing went wrong"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Article"
+        ],
+        "summary": "Artical details",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "client",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "uid",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "expiry",
+            "required": true,
+            "in": "header",
+          },{
+            "name": "token-type",
+            "required": true,
+            "in": "header",
+          },{
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "description": "successful operation",
+              "type": "object",
+              "properties": {
+                "title": {"type": "string"},
+                "content": {"type": "string"},
+                "image": {"type": "string"},
+                "view_count": {"type": "integer", "format": "int32"},
+                "publish_date":{"type": "string", "format": "date-time"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params"
+          },
+          "500": {
+            "description": "Somthing went wrong"
+          }
+        }
+      },
+    },
+  },
+  "definitions": {
+    "Article": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+        },
+        "user_id": {
+          "type": "int64"
+        },
+        "title": {
+          "type": "integer",
+        },
+        "is_publish": {
+          "type": "boolean",
+        },        
+        "publish_date":{
+          "type": "date",
+        },
+        "content":{
+          "type": "string",
+        },
+        "view_count":{
+          "type": "int64",
+        },
+        "image":{
+          "type": "string",
+        },
+        "created_at":{
+          "type": "datetime",
+        },
+        "updated_at":{
+          "type": "datetime",
+        },
+      },
+      "xml": {
+        "name": "Articles"
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {       
+        "email":{
+          "type": "string",
+        },
+        "name":{
+          "type": "string",
+        },
+        "mobile":{
+          "type": "string",
+        },
+        "image":{
+          "type": "string",
+        },
+        "location":{
+          "type": "string",
+        },
+        "about_me":{
+          "type": "string",
+        }
+      },
+      "xml": {
+        "name": "Articles"
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
